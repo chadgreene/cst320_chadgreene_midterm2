@@ -17,13 +17,36 @@ static int Return(int val);
 
 
     /* definitions go here. period is an example. */
-period          ['.']
-
+identifiers     [\.\{\}\(\)\[\]\,\;]
+digit           [+-]?[0-9]
+oper            [==]?[+\-*\\=]
+logi            [\&\|]
+comment         [\/\/ ]+[\.\'\(\)\" a-zA-z0-9]+
+letter          [a-zA-Z]     
 %%
 
     // token definitions go here. "if" is an example.
 "if"                        RETURN(IF);
-
+"then"                      RETURN(THEN);
+"else"                      RETURN(ELSE);
+"while"                     RETURN(WHILE);
+"print"                     RETURN(PRINT);
+"scan"                      RETURN(SCAN);
+"int"                       RETURN(INT);
+"float"                     RETURN(FLOAT);
+"char"                      RETURN(CHAR);
+"struct"                    RETURN(STRUCT);
+"return"                    RETURN(RETURN_TOK);
+"for"                       RETURN(FOR);
+{digit}+                    RETURN(INT_VAL);
+{digit}+"."{digit}+         RETURN(FLOAT_VAL);
+{letter}({letter}|{digit})* RETURN(IDENTIFIER);
+[\/]                        RETURN(OPERATOR);
+{comment}                   /* Skip comments */
+{oper}|{logi}{logi}?|[\%]   RETURN(OPERATOR);
+{identifiers}               RETURN((char)*yytext);
+[ \t\n\r]                   /* Skip whitespace */
+.                           RETURN(JUNK_TOKEN);
 %%
 
 // This function allows us to do extra processing on each token
@@ -32,4 +55,3 @@ static int Return(int val)
 //    printf("Scanned '%s': %d\n", yytext, val);
     return val;
 }
-

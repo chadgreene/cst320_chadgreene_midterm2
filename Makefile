@@ -16,7 +16,7 @@ clean:
 .cpp.o:
 	g++ $(COPTS) $? -o $@
 
-main.o: main.cpp langlex.c 
+main.o: main.cpp langlex.c
 	g++ $(COPTS) main.cpp -o main.o
 
 langlex.c: lang.l
