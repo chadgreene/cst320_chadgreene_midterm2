@@ -20,7 +20,7 @@ static int Return(int val);
 punct           [\.\{\}\(\)\[\]\,\;]
 digit           [+-]?[0-9]
 oper            [+\-*\\=\%]|"=="|"&&"|"||"
-comment         "//".+$
+comment         "//".*$
 letter          [a-zA-Z]     
 %%
 
