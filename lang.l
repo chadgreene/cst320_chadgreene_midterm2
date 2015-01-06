@@ -17,11 +17,10 @@ static int Return(int val);
 
 
     /* definitions go here. period is an example. */
-identifiers     [\.\{\}\(\)\[\]\,\;]
+punct           [\.\{\}\(\)\[\]\,\;]
 digit           [+-]?[0-9]
-oper            [==]?[+\-*\\=]
-logi            [\&\|]
-comment         [\/\/ ]+[\.\'\(\)\" a-zA-z0-9]+
+oper            [+\-*\\=\%]|"=="|"&&"|"||"
+comment         "//".+$
 letter          [a-zA-Z]     
 %%
 
@@ -43,8 +42,8 @@ letter          [a-zA-Z]
 {letter}({letter}|{digit})* RETURN(IDENTIFIER);
 [\/]                        RETURN(OPERATOR);
 {comment}                   /* Skip comments */
-{oper}|{logi}{logi}?|[\%]   RETURN(OPERATOR);
-{identifiers}               RETURN((char)*yytext);
+{oper}                      RETURN(OPERATOR);
+{punct}                     RETURN((char)*yytext);
 [ \t\n\r]                   /* Skip whitespace */
 .                           RETURN(JUNK_TOKEN);
 %%
