@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 {
     const char *outfile_name;
     int result = 0;
-    int token;
+    //int token;
 
     if (argc > 1)
     {
@@ -41,11 +41,11 @@ int main(int argc, char **argv)
     }
     std::cout.rdbuf(output.rdbuf());
 
-    token = yylex();
-    while (token != 0)
+    
+    while (GetToken() != 0)
     {
-        std::cout << token << ":" << yytext << "\n";
-        token = yylex();
+        
+        std::cout << token << "\n";
     }
 
     output.close();
