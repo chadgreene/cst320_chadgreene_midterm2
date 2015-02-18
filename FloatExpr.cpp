@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 4 Abstract Syntax Tree
- * Date: 2/8/15
+ * Lab: Lab 5 Semantic Error Checking
+ * Date: 2/18/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -15,4 +15,14 @@ FloatExpr::FloatExpr(double val)
 string FloatExpr::toString()
 {
     return "(EXPR: " + std::to_string(m_val) + ")";
+}
+
+string FloatExpr::GetType()
+{
+    return "float";
+}
+
+string FloatExpr::GetBaseType()
+{
+    return GetType();
 }

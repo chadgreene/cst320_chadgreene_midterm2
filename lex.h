@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 4 Abstract Syntax Tree
- * Date: 2/8/15
+ * Lab: Lab 5 Semantic Error Checking
+ * Date: 2/18/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -35,10 +35,9 @@
 #include "cParamSpec.h"
 #include "cParamsNode.h"
 #include "cParamsSpec.h"
-#include "cFuncPrefix.h"
-#include "cFuncHeader.h"
 #include "cFuncDecl.h"
 #include "cFuncCall.h"
+#include "cArrayDecl.h"
 #include "langparse.h"
 
 extern char *yytext;
@@ -47,4 +46,5 @@ extern cSymbolTable *symbolTableRoot;
 extern FILE *yyin;          // input file for lexer
 extern int yyparse();
 extern int yylex();
+extern int yynerrs;
 

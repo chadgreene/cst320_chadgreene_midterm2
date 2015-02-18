@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 4 Abstract Syntax Tree
- * Date: 2/8/15
+ * Lab: Lab 5 Semantic Error Checking
+ * Date: 2/18/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -14,7 +14,7 @@
 class cWhileNode: public cStmtNode
 {
     public:
-        cWhileNode(ExprNode* expr, cStmtNode* stmt);
+        cWhileNode(ExprNode* expr = nullptr, cStmtNode* stmt = nullptr);
         string toString();
     
     private:

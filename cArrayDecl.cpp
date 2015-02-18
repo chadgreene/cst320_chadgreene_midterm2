@@ -6,24 +6,19 @@
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
 *******************************************************************************/
-#include "cDeclsNode.h"
+#include "cArrayDecl.h"
 
-cDeclsNode::cDeclsNode()
+cArrayDecl::cArrayDecl(cSymbol* typeId, cSymbol* identifier, cArraySpec* array)
+    :m_typeId(typeId), m_identifier(identifier), m_array(array)
 {}
 
-string cDeclsNode::toString()
+string cArrayDecl::toString()
 {
-    string retVal = "DECLS:\n{\n";
+    string retVal = "ARRAY: ";
     
-    for(auto &decl : m_decls)
-        retVal += decl->toString()+ "\n";
-    
-    retVal += "}\n";
+    retVal += m_typeId->toString() + " " + m_identifier->toString();
+    if(m_array != nullptr)
+        retVal += " " + m_array->toString();
     
     return retVal;
-}
-
-void cDeclsNode::Add(cDeclNode* data)
-{
-    m_decls.push_back(data);
 }

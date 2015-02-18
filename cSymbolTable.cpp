@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 4 Abstract Syntax Tree
- * Date: 2/8/15
+ * Lab: Lab 5 Semantic Error Checking
+ * Date: 2/18/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -14,11 +14,21 @@ cSymbolTable::cSymbolTable()
 {
         //Push global map onto table
     m_tables.push_front(new map<string,cSymbol*>());
+        
+        //Add char datatype
+    cSymbol* global = new cSymbol("char", true);
+    global->SetTypeRef("char", "char", nullptr);
+    m_tables.front()->insert(std::pair<string,cSymbol*>("char", global));
     
-        //Add typedefs into global namespace
-    m_tables.front()->insert(std::pair<string,cSymbol*>("char", new cSymbol("char", true)));
-    m_tables.front()->insert(std::pair<string,cSymbol*>("int", new cSymbol("int", true)));
-    m_tables.front()->insert(std::pair<string,cSymbol*>("float", new cSymbol("float", true)));
+        //Add int datatype
+    global = new cSymbol("int", true);
+    global->SetTypeRef("int", "int", nullptr);
+    m_tables.front()->insert(std::pair<string,cSymbol*>("int", global));
+    
+        //Add float datatype
+    global = new cSymbol("float", true);
+    global->SetTypeRef("float","float",nullptr);
+    m_tables.front()->insert(std::pair<string,cSymbol*>("float", global));
 }
 
 cSymbolTable* cSymbolTable::GetInstance()
@@ -32,9 +42,10 @@ cSymbolTable* cSymbolTable::GetInstance()
 
 map<string,cSymbol*>* cSymbolTable::IncreaseScope()
 {
+    map<string,cSymbol*> * newMap = new map<string,cSymbol*>();
     //Add symbol table to list
-    m_tables.push_front(new map<string,cSymbol*>());
-    return m_tables.front();
+    m_tables.push_front(newMap);
+    return newMap;
 }
 
 void cSymbolTable::DecreaseScope()
@@ -64,6 +75,7 @@ cSymbol* cSymbolTable::InsertSymbol(string symbol, bool type)
     return sym;
 }
 
+//Lookups a symbol from all symbol tables currently in list
 cSymbol* cSymbolTable::Lookup(string symbol)
 {
         //Iterator for list of maps
@@ -80,4 +92,24 @@ cSymbol* cSymbolTable::Lookup(string symbol)
     
         //return nothing
     return nullptr;
+}
+
+//Checks to see if a symbol is in the current symbol table
+bool cSymbolTable::InCurrentScope(string symbol)
+{
+        //Search for symbol in current scope
+    map<string,cSymbol*>::iterator it = m_tables.front()->find(symbol);
+    
+        //If symbol is in current scope return true
+    if(it != m_tables.front()->end())
+        return true;
+    
+    return false;
+}
+
+//Allows removal of symbol from table and decrements the symbol counter
+void cSymbolTable::RemoveSymbol(cSymbol* symbol)
+{
+    symbol->ReduceSymbolCount();
+    m_tables.front()->erase(symbol->GetSymbol());
 }

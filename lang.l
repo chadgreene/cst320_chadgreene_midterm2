@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 4 Abstract Syntax Tree
- * Date: 2/8/15
+ * Lab: Lab 5 Semantic Error Checking
+ * Date: 2/18/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -42,6 +42,7 @@ ident           [a-zA-Z][a-zA-Z0-9_]*
 "return"                    RETURN(RETURN);
 "{"                         return yytext[0];
 "}"                         return yytext[0];
+"array"                     RETURN(ARRAY);
 {ident}                     {
                                     //Find any matching symbol in entire table
                                 yylval.symbol = symbolTableRoot->Lookup(yytext);
@@ -54,6 +55,7 @@ ident           [a-zA-Z][a-zA-Z0-9_]*
                                     //of IDENTIFIER but keep yylval as found symbol
                                     if(yylval.symbol->IsType())
                                         RETURN(TYPE_ID);
+                                    
                                 }
                                 else
                                     yylval.symbol = symbolTableRoot->InsertSymbol(yytext);

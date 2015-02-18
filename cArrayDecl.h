@@ -1,27 +1,25 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 4 Abstract Syntax Tree
- * Date: 2/8/15
+ * Lab: Lab 5 Semantic Error Checking
+ * Date: 2/18/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
 *******************************************************************************/
 #pragma once
 
-#include <string>
-#include "cFuncPrefix.h"
-#include "cParamsSpec.h"
+#include "cDeclNode.h"
+#include "cArraySpec.h"
+#include "cSymbol.h"
 
-using std::string;
-
-class cFuncHeader
+class cArrayDecl : public cDeclNode
 {
     public:
-        cFuncHeader(cFuncPrefix* prefix, cParamsSpec* params = nullptr);
+        cArrayDecl(cSymbol* typeId = nullptr, cSymbol* identifier = nullptr, cArraySpec* array = nullptr);
         string toString();
     
     private:
-        cFuncPrefix* m_prefix;
-        cParamsSpec* m_params;
-        
+        cSymbol* m_typeId;
+        cSymbol* m_identifier;
+        cArraySpec* m_array;
 };

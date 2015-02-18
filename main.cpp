@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 4 Abstract Syntax Tree
- * Date: 2/8/15
+ * Lab: Lab 5 Semantic Error Checking
+ * Date: 2/18/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -61,11 +61,12 @@ int main(int argc, char **argv)
         {
             output << yyast_root->toString() << std::endl;
         } else {
-            output << "Errors in compile\n";
+            output << std::to_string(yynerrs) <<  " Errors in compile\n";
         }
     }
 
     output.close();
     std::cout.rdbuf(cout_buf);
     return result;
+   
 }

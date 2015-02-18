@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 4 Abstract Syntax Tree
- * Date: 2/8/15
+ * Lab: Lab 5 Semantic Error Checking
+ * Date: 2/18/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -33,13 +33,12 @@
     cParamsNode*    params_node;
     cParamsSpec*    params_spec;
     cParamSpec*     param_spec;
-    cFuncHeader*    func_header;
-    cFuncPrefix*    func_prefix;
     cFuncCall*      func_node;
     }
 
 %{
     int yyerror(const char *msg);
+    void semantic_error(std::string msg);
 
     cAstNode *yyast_root;
 %}
@@ -51,7 +50,7 @@
 %token <int_val>    INT_VAL
 %token <float_val>  FLOAT_VAL
 
-%token  SCAN PRINT
+%token  SCAN PRINT ARRAY
 %token  STRUCT
 %token  WHILE IF ELSE 
 %token  RETURN
@@ -66,8 +65,9 @@
 %type <decl_node> var_decl
 %type <decl_node> struct_decl
 %type <decl_node> func_decl
-%type <func_header>  func_header
-%type <func_prefix>  func_prefix
+%type <decl_node> array_decl
+%type <decl_node>  func_header
+%type <symbol> func_prefix
 %type <func_node> func_call
 %type <params_spec> paramsspec
 %type <param_spec> paramspec
@@ -123,63 +123,102 @@ decl:       var_decl ';'        {
         |   func_decl           {
                                     $$ = $1;
                                 }
-        |   error ';'           {}
-var_decl:   TYPE_ID IDENTIFIER arrayspec    
-                                {
-                                    $2 = symbolTableRoot->InsertSymbol($2->GetSymbol());
-                                    $$ = new cVarNode($1, $2, $3);
+        |   array_decl ';'      {
+                                    $$ = $1;          
                                 }
-        |   struct_decl IDENTIFIER arrayspec
+        |   error ';'           {}
+var_decl:   TYPE_ID IDENTIFIER    
                                 {
-                                    //I don't belive this production can/should
-                                    //ever be called.
-                                    //wouldn't the test case be
-                                    
-                                    /*
-                                    struct
+                                    if(symbolTableRoot->InCurrentScope($2->GetSymbol()) && $2->IsDeclared())
                                     {
-                                    int aaa;
-                                    int bbb;
-                                    char ccc;
-                                    } a_struct b_struct[2];
-                                    */
-                                    
-                                    //which doesn't make any sense.
-                                    
-                                    std::cout << "Called strange production" << std::endl;
+                                        $$ = nullptr;
+                                        semantic_error("Symbol " + $2->GetSymbol() + " already defined in current scope");
+                                        YYERROR;
+                                    }
+                                    else
+                                    {
+                                        $2 = symbolTableRoot->InsertSymbol($2->GetSymbol());
+                                        $2->SetDeclared();
+                                        $$ = new cVarNode($1, $2);
+                                        $2->SetTypeRef($1->GetType(), $1->GetBaseType(), $1->GetRef());
+                                    }
+                                }
+array_decl:   ARRAY TYPE_ID IDENTIFIER arrayspec
+                                {
+                                    if(symbolTableRoot->InCurrentScope($3->GetSymbol()) && $3->IsDeclared())
+                                    {
+                                        $$ = nullptr;
+                                        semantic_error("Symbol " + $3->GetSymbol() + " already defined in current scope");
+                                        YYERROR;
+                                    }
+                                    else
+                                    {
+                                        $3 = symbolTableRoot->InsertSymbol($3->GetSymbol());
+                                        $3->SetTypeFlag();
+                                        $3->SetDeclared();
+                                        $$ = new cArrayDecl($2, $3, $4);
+                                        $3->SetTypeRef($3->GetSymbol(), $2->GetSymbol(), $$);
+                                    }
                                 }
 struct_decl:  STRUCT open decls close IDENTIFIER    
                                 {
-                                    $5->SetTypeFlag();
-                                    $$ = new cStructDecl($2, $3, $5);
+                                    if(symbolTableRoot->InCurrentScope($5->GetSymbol()) && $5->IsDeclared())
+                                    {
+                                        $$ = nullptr;
+                                        semantic_error("Symbol " + $5->GetSymbol() + " already defined in current scope");
+                                        YYERROR;
+                                    }
+                                    else
+                                    {
+                                        $5 = symbolTableRoot->InsertSymbol($5->GetSymbol());
+                                        $5->SetTypeFlag();
+                                        $5->SetDeclared();
+                                        $$ = new cStructDecl($2, $3, $5);
+                                        $5->SetTypeRef($5->GetSymbol(), $5->GetSymbol(), $$);
+                                    }
+                                    
                                 }
 func_decl:  func_header ';'
                                 {
-                                    $$ = new cFuncDecl($1);
+                                    $$ = $1;
                                     symbolTableRoot->DecreaseScope();
                                 }
         |   func_header  '{' decls stmts '}'
                                 {
-                                    $$ = new cFuncDecl($1, $3, $4);
+                                    $$ = $1;
+                                    cFuncDecl* node = dynamic_cast<cFuncDecl*>($$);
+                                    node->SetDecls($3);
+                                    node->SetStmts($4);
                                     symbolTableRoot->DecreaseScope();
-                                    
                                 }
         |   func_header  '{' stmts '}'
                                 {
-                                    $$ = new cFuncDecl($1, nullptr, $3);
+                                    $$ = $1;
+                                    ((cFuncDecl*)$$)->SetStmts($3);
                                     symbolTableRoot->DecreaseScope();
                                 }
 func_header: func_prefix paramsspec ')'
                                 {
-                                    $$ = new cFuncHeader($1, $2);
+                                    $$ = new cFuncDecl($1, $2);
                                 }
         |    func_prefix ')'    {
-                                    $$ = new cFuncHeader($1);
+                                    $$ = new cFuncDecl($1);
                                 }
 func_prefix: TYPE_ID IDENTIFIER '('
                                 {
-                                    symbolTableRoot->IncreaseScope();
-                                    $$ = new cFuncPrefix($1, $2);
+                                    if(symbolTableRoot->InCurrentScope($2->GetSymbol()) && $2->IsDeclared())
+                                    {
+                                        $$ = nullptr;
+                                        semantic_error("Symbol " + $2->GetSymbol() + " already defined in current scope");
+                                        YYERROR;
+                                    }
+                                    else
+                                    {
+                                        $$ = symbolTableRoot->InsertSymbol($2->GetSymbol());
+                                        $$->SetDeclared();
+                                        $$->SetTypeRef($1->GetSymbol(), $1->GetSymbol(), $1->GetRef());
+                                        symbolTableRoot->IncreaseScope();
+                                    }
                                 }
 paramsspec:     
             paramsspec',' paramspec 
@@ -211,11 +250,13 @@ arrayspec:  arrayspec '[' INT_VAL ']'
 
 stmts:      stmts stmt          {
                                     $$ = $1;
-                                    $$->Add($2);
+                                    if($2 != nullptr)
+                                        $$->Add($2);
                                 }
         |   stmt                {
                                     $$ = new cStmtsNode();
-                                    $$->Add($1);
+                                    if($1 != nullptr)
+                                        $$->Add($1);
                                 }
 
 stmt:       IF '(' expr ')' stmt 
@@ -239,10 +280,14 @@ stmt:       IF '(' expr ')' stmt
                                     $$ = new cScanNode($3);
                                 }
         |   lval '=' expr ';'   {
-                                    //Typecasting back to VarRef because holding
-                                    //an expression for the LHS doesn't make any
-                                    //sense.
                                     $$ = new cAssignmentNode((cVarRef*)$1, $3);
+                                    
+                                    if($$->SemanticError())
+                                    {
+                                        $$ = nullptr;
+                                        semantic_error("Cannot assign " + $3->GetBaseType() + " to " + $1->GetBaseType());
+                                    }
+                                    
                                 }
         |   func_call ';'       {
                                    $$ = $1;
@@ -260,14 +305,24 @@ func_call:  IDENTIFIER '(' params ')'
                                     $$ = new cFuncCall($1, $3);                              
                                 }
 varref:   varref '.' varpart    {
-                                    if($1 == nullptr)
-                                        $1 = new cVarRef();
+                                    //if($1 == nullptr)
+                                        //$1 = new cVarRef();
                                     $$ = $1;
                                     $$->Add($3);
+                                    if($$->SemanticError())
+                                    {
+                                        semantic_error($$->GetErrorMsg());
+                                        YYERROR;
+                                    }
                                 }
         | varpart               {
                                     $$ = new cVarRef();
                                     $$->Add($1);
+                                    if($$->SemanticError())
+                                    {
+                                        semantic_error($$->GetErrorMsg());
+                                        YYERROR;
+                                    }
                                 }
 
 varpart:  IDENTIFIER arrayval   {
@@ -341,7 +396,6 @@ fact:        '(' expr ')'       {
                                    $$ = $1;
                                 }
         |   func_call           {
-                                   //Not sure what this call does but it never gets hit
                                    $$ = $1;
                                 }
 
@@ -353,4 +407,12 @@ int yyerror(const char *msg)
         << yytext << " on line " << yylineno << "\n";
 
     return 0;
+}
+
+void semantic_error(std::string msg)
+{
+    std::cout << "ERROR: " << msg <<
+                 " on line " << yylineno << std::endl;
+    
+    yynerrs++;
 }
