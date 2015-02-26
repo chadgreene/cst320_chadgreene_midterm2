@@ -17,6 +17,7 @@ class cParamsSpec : public cStmtNode
         cParamsSpec();
         string toString();
         void Add(cParamSpec* param = nullptr);
+        int CalculateSize(int offset);
         
     private:
         list<cParamSpec*> m_params;

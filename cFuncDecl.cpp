@@ -10,7 +10,10 @@
 
 cFuncDecl::cFuncDecl(cSymbol* header, cParamsSpec* params)
     :m_header(header), m_params(params), m_decls(nullptr), m_stmts(nullptr)
-{}
+{
+    m_size = -1;
+    m_offset = -1;
+}
 
 string cFuncDecl::toString()
 {
@@ -27,9 +30,10 @@ string cFuncDecl::toString()
     if(m_stmts != nullptr)
         retVal += "\n" + m_stmts->toString();
     
-    retVal += "\n)";
+    if(m_size != -1)
+        retVal += "\nsize: " + std::to_string(m_size);
     
-    return retVal;
+    return retVal + "\n)";
 }
 
 void cFuncDecl::SetStmts(cStmtsNode* stmts)
@@ -40,4 +44,29 @@ void cFuncDecl::SetStmts(cStmtsNode* stmts)
 void cFuncDecl::SetDecls(cDeclsNode* decls)
 {
     m_decls = decls;
+}
+
+int cFuncDecl::CalculateSize(int offset)
+{
+    m_offset = 0;
+    if(m_params != nullptr)
+       m_offset = m_params->CalculateSize(m_offset);
+    if(m_decls != nullptr)
+        m_offset = m_decls->CalculateSize(m_offset);
+    
+    //int diff = WordAlign(m_offset) - m_offset;
+    if(m_stmts != nullptr)
+        m_offset = m_stmts->CalculateSize(m_offset);
+    
+    
+    
+    
+    m_size = m_offset;
+
+    return offset;
+}
+
+int cFuncDecl::GetSize()
+{
+    return m_header->GetSize();
 }

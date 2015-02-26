@@ -21,7 +21,7 @@ class cBlockNode : public cStmtNode
     public:
         cBlockNode(map<string,cSymbol*>* symTable = nullptr, cDeclsNode* decls = nullptr, cStmtsNode* stmts = nullptr);
         string toString();
-    
+        int CalculateSize(int offset);
     private:
         map<string,cSymbol*>* m_symTable;
         cDeclsNode * m_decls;

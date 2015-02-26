@@ -19,6 +19,7 @@ class cStmtsNode : public cAstNode
         cStmtsNode();
         string toString();
         void Add(cStmtNode* data = nullptr);
+        int CalculateSize(int offset);
         
     private:
         list<cStmtNode*> m_stmts;        

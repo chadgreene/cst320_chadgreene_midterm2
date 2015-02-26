@@ -11,7 +11,7 @@
 int cSymbol::symbolCount = 0;
 
 cSymbol::cSymbol(string symbol, bool type)
-    :m_symbol(symbol), m_sequence(++symbolCount), m_type(type), m_declared(false), m_typeRef(""), m_decl(nullptr)
+    :m_symbol(symbol), m_sequence(++symbolCount), m_type(type), m_declared(false), m_typeRef(""), m_decl(nullptr), m_size(0)
 {}
 
 string cSymbol::toString()
@@ -69,4 +69,14 @@ cDeclNode* cSymbol::GetRef()
 void cSymbol::ReduceSymbolCount()
 {
     symbolCount--;
+}
+
+void cSymbol::SetSize(int size)
+{
+    m_size = size;
+}
+
+int cSymbol::GetSize()
+{
+    return m_size;
 }

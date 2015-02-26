@@ -9,10 +9,11 @@
 #pragma once
 
 #include <string>
+#include "cAstNode.h"
 using std::string;
 
-class cDeclNode
+class cDeclNode : public cAstNode
 {
     public:
-        virtual string toString() = 0;
+        virtual int GetSize() = 0;
 };

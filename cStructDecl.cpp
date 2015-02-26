@@ -10,13 +10,20 @@
 
 cStructDecl::cStructDecl(map<string,cSymbol*>* symTable, cDeclsNode* decls, cSymbol* identifier)
     :m_symTable(symTable), m_decls(decls), m_identifier(identifier)
-{}
+{
+    m_size = -1;
+    m_offset = -1;
+    SetSize();
+}
 
 string cStructDecl::toString()
 {
     string retVal = "STRUCT: ";
     
     retVal += m_decls->toString() + " " + m_identifier->toString();
+    
+    if(m_size != -1)
+        retVal += " size: " + std::to_string(m_size);
     
     return retVal;
 }
@@ -40,4 +47,23 @@ cSymbol* cStructDecl::Find(string symbol)
     }
     
     return retVal;
+}
+
+int cStructDecl::CalculateSize(int offset)
+{
+    m_offset = 0;
+    m_offset = m_decls->CalculateSize(WordAlign(m_offset));
+    m_size = m_offset;
+    
+    return offset;
+}
+
+void cStructDecl::SetSize()
+{
+    m_identifier->SetSize(m_decls->GetSize());
+}
+
+int cStructDecl::GetSize()
+{
+    return m_identifier->GetSize();
 }

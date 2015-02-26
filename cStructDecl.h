@@ -21,10 +21,12 @@ class cStructDecl : public cDeclNode
         string toString();
         void PrintSymbolTable();
         cSymbol* Find(string symbol);
+        int CalculateSize(int offset);
+        int GetSize();
     
     private:
         map<string,cSymbol*>* m_symTable;
         cDeclsNode* m_decls;
         cSymbol* m_identifier;
-        
+        void SetSize();
 };

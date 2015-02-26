@@ -19,6 +19,8 @@ class cDeclsNode : public cAstNode
         cDeclsNode();
         string toString();
         void Add(cDeclNode* data = nullptr);
+        int CalculateSize(int offset);
+        int GetSize();
         
     private:
         list<cDeclNode*> m_decls;

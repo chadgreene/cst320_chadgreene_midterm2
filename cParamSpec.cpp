@@ -16,3 +16,8 @@ string cParamSpec::toString()
 {
     return m_param->toString();
 }
+
+int cParamSpec::CalculateSize(int offset)
+{
+    return m_param->CalculateSize(offset);
+}

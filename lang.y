@@ -139,6 +139,7 @@ var_decl:   TYPE_ID IDENTIFIER
                                     {
                                         $2 = symbolTableRoot->InsertSymbol($2->GetSymbol());
                                         $2->SetDeclared();
+                                        $2->SetSize($1->GetSize());
                                         $$ = new cVarNode($1, $2);
                                         $2->SetTypeRef($1->GetType(), $1->GetBaseType(), $1->GetRef());
                                     }
@@ -216,6 +217,7 @@ func_prefix: TYPE_ID IDENTIFIER '('
                                     {
                                         $$ = symbolTableRoot->InsertSymbol($2->GetSymbol());
                                         $$->SetDeclared();
+                                        $$->SetSize($1->GetSize());
                                         $$->SetTypeRef($1->GetSymbol(), $1->GetSymbol(), $1->GetRef());
                                         symbolTableRoot->IncreaseScope();
                                     }
@@ -288,6 +290,16 @@ stmt:       IF '(' expr ')' stmt
                                         semantic_error("Cannot assign " + $3->GetBaseType() + " to " + $1->GetBaseType());
                                     }
                                     
+                                }
+        |   lval '=' func_call ';'
+                                {
+                                    $$ = new cAssignmentNode((cVarRef*)$1, $3);
+                                    
+                                    if($$->SemanticError())
+                                    {
+                                        $$ = nullptr;
+                                        semantic_error("Cannot assign " + $3->GetBaseType() + " to " + $1->GetBaseType());
+                                    }
                                 }
         |   func_call ';'       {
                                    $$ = $1;
@@ -395,10 +407,6 @@ fact:        '(' expr ')'       {
         |   varref              {
                                    $$ = $1;
                                 }
-        |   func_call           {
-                                   $$ = $1;
-                                }
-
 %%
 
 int yyerror(const char *msg)

@@ -21,6 +21,8 @@ class cFuncDecl : public cDeclNode
         string toString();
         void SetStmts(cStmtsNode* stmts = nullptr);
         void SetDecls(cDeclsNode* decls = nullptr);
+        int CalculateSize(int offset);
+        int GetSize();
     
     private:
         cSymbol* m_header;

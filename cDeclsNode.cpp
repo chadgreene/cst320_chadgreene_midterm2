@@ -9,7 +9,10 @@
 #include "cDeclsNode.h"
 
 cDeclsNode::cDeclsNode()
-{}
+{
+    m_offset = -1;
+    m_size = -1;
+}
 
 string cDeclsNode::toString()
 {
@@ -26,4 +29,25 @@ string cDeclsNode::toString()
 void cDeclsNode::Add(cDeclNode* data)
 {
     m_decls.push_back(data);
+}
+
+int cDeclsNode::CalculateSize(int offset)
+{
+    m_offset = WordAlign(offset);
+    for(auto &decl : m_decls)
+        m_offset = decl->CalculateSize(WordAlign(m_offset));
+        
+    return m_offset;
+}
+
+int cDeclsNode::GetSize()
+{
+    int retVal = 0;
+    for(auto &decl : m_decls)
+    {
+        retVal = WordAlign(retVal);
+        retVal += decl->GetSize();
+    }
+    
+    return retVal;
 }

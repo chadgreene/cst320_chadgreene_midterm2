@@ -29,6 +29,8 @@ class cSymbol
     string GetBaseType();
     cDeclNode* GetRef();
     void ReduceSymbolCount();
+    void SetSize(int size);
+    int GetSize();
     
   private:
     string m_symbol;
@@ -39,4 +41,5 @@ class cSymbol
     string m_typeRef;
     cDeclNode* m_decl;
     string m_baseType;
+    int m_size;
 };

@@ -10,14 +10,16 @@
 
 #include <string>
 #include "cVarNode.h"
+#include "cStmtNode.h"
 using std::string;
 
-class cParamSpec
+class cParamSpec : public cStmtNode
 {
     public:
         cParamSpec(cVarNode* node = nullptr);
         string toString();
-    
+        int CalculateSize(int offset);
+        
     private:
         cVarNode* m_param;
     

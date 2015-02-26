@@ -9,7 +9,10 @@
 #include "cParamsSpec.h"
 
 cParamsSpec::cParamsSpec()
-{}
+{
+    m_size = -1;
+    m_offset = -1;
+}
 
 string cParamsSpec::toString()
 {
@@ -26,4 +29,13 @@ string cParamsSpec::toString()
 void cParamsSpec::Add(cParamSpec* param)
 {
     m_params.push_back(param);
+}
+
+int cParamsSpec::CalculateSize(int offset)
+{
+    m_offset = WordAlign(offset);
+    for(auto &param : m_params)
+        m_offset = param->CalculateSize(WordAlign(m_offset));
+    
+    return offset;
 }

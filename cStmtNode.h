@@ -15,5 +15,4 @@ using std::string;
 using std::list;
 
 class cStmtNode : public cAstNode
-{
-};
+{};

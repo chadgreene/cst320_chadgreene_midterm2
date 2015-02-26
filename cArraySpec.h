@@ -19,6 +19,7 @@ class cArraySpec
         cArraySpec();
         string toString();
         void Add(int val = -1);
+        int GetSize();
     
     private:
         list<int> m_array;

@@ -16,10 +16,9 @@ class cVarNode : public cDeclNode
     public:
         cVarNode(cSymbol* typeId = nullptr, cSymbol* identifier = nullptr);
         string toString();
-        cSymbol* GetSymbol()
-        {
-            return m_identifier;
-        }
+        cSymbol* GetSymbol();
+        int CalculateSize(int offset);
+        int GetSize();
     
     private:
         cSymbol* m_typeId;

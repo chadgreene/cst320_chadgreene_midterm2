@@ -18,16 +18,19 @@ cSymbolTable::cSymbolTable()
         //Add char datatype
     cSymbol* global = new cSymbol("char", true);
     global->SetTypeRef("char", "char", nullptr);
+    global->SetSize(1);
     m_tables.front()->insert(std::pair<string,cSymbol*>("char", global));
     
         //Add int datatype
     global = new cSymbol("int", true);
     global->SetTypeRef("int", "int", nullptr);
+    global->SetSize(4);
     m_tables.front()->insert(std::pair<string,cSymbol*>("int", global));
     
         //Add float datatype
     global = new cSymbol("float", true);
     global->SetTypeRef("float","float",nullptr);
+    global->SetSize(8);
     m_tables.front()->insert(std::pair<string,cSymbol*>("float", global));
 }
 

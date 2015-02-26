@@ -22,11 +22,8 @@ bool cAssignmentNode::CanAssign()
     //Otherwise return semantic error
     if(m_lhs->GetType() != m_rhs->GetType())
     {
-        // std::cout << "Types do not match checking base types" << std::endl;
-        // std::cout << "LHS: " << m_lhs->GetSymbol() << " RHS: " << ((VarPart*)m_rhs)->GetSymbol() << std::endl;
-        // std::cout << "LHS bType: " << m_lhs->GetBaseType() << " RHS bType: " << m_rhs->GetBaseType() << std::endl;
+        
         //If base types match return false otherwise check datatypes
-        //std::cout << "Comparing: " << m_lhs->GetBaseType() << " to " << m_rhs->GetBaseType() << std::endl;
         if(m_lhs->GetBaseType() != m_rhs->GetBaseType())
         {
             switch(m_lhs->GetBaseType()[0])

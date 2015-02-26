@@ -23,7 +23,20 @@ string cArraySpec::toString()
         //Return string
     return retVal;
 }
+
 void cArraySpec::Add(int val)
 {
     m_array.push_back(val);
+}
+
+int cArraySpec::GetSize()
+{
+    int retVal = 0;
+    list<int>::iterator it = m_array.begin();
+    if(it != m_array.end())
+        retVal = *it;
+    for(++it; it != m_array.end(); ++it)
+        retVal *= *it;
+    
+    return retVal;
 }

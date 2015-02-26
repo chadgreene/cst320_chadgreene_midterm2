@@ -9,18 +9,31 @@
 #include "cStmtsNode.h"
 
 cStmtsNode::cStmtsNode()
-{}
+{
+    m_size = -1;
+    m_offset = -1;
+}
 
 string cStmtsNode::toString()
 {
     string retVal = "STMTS:\n{\n";
     for(auto &stmt : m_stmts)
         retVal += stmt->toString()+ "\n";
-    retVal += "}";
+    retVal += "}\n";
     return retVal;
 }
 
 void cStmtsNode::Add(cStmtNode* data)
 {
     m_stmts.push_back(data);
+}
+
+int cStmtsNode::CalculateSize(int offset)
+{
+    m_offset = WordAlign(offset);
+    for(auto &stmt : m_stmts)
+        m_offset = stmt->CalculateSize(WordAlign(m_offset));
+    
+    return offset;
+        
 }
