@@ -48,7 +48,7 @@ int cBlockNode::CalculateSize(int offset)
         m_offset = m_stmts->CalculateSize(m_offset);
         
         //Set Block size
-    m_size = m_offset - offset;
+    m_size = m_offset;// - offset;
     
         //return passed in offset
     return offset;

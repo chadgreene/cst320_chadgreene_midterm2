@@ -53,8 +53,6 @@ int cFuncDecl::CalculateSize(int offset)
        m_offset = m_params->CalculateSize(m_offset);
     if(m_decls != nullptr)
         m_offset = m_decls->CalculateSize(m_offset);
-    
-    //int diff = WordAlign(m_offset) - m_offset;
     if(m_stmts != nullptr)
         m_offset = m_stmts->CalculateSize(m_offset);
     
