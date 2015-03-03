@@ -17,9 +17,7 @@ bool cAssignmentNode::CanAssign()
 {
     bool retVal = true;
     
-    //If lhs size is larger than rhs size return false or
-    //If lhs is char and rhs is IntExpr test to see if value is in range
-    //Otherwise return semantic error
+        //If types do not match check base types
     if(m_lhs->GetType() != m_rhs->GetType())
     {
         
@@ -47,4 +45,12 @@ bool cAssignmentNode::CanAssign()
         retVal = false;
         
     return retVal;
+}
+
+int cAssignmentNode::CalculateSize(int offset)
+{
+    m_lhs->CalculateSize(offset);
+    m_rhs->CalculateSize(offset);
+    
+    return offset;
 }

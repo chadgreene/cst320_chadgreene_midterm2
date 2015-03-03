@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 5 Semantic Error Checking
- * Date: 2/18/15
+ * Lab: Lab 6 Calculate node sizes and offsets
+ * Date: 3/4/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -37,18 +37,18 @@ string cBlockNode::toString()
 int cBlockNode::CalculateSize(int offset)
 {
         //Align offset
-    m_offset = WordAlign(offset);
+    m_offset = offset;
     
         //Calculate offsets and size for decls
     if(m_decls != nullptr)
-        m_offset = m_decls->CalculateSize(WordAlign(m_offset));
+        m_offset = m_decls->CalculateSize(m_offset);
         
         //Calculate offsets and size for stmts
     if(m_stmts != nullptr)
         m_offset = m_stmts->CalculateSize(m_offset);
-        
+    
         //Set Block size
-    m_size = m_offset;// - offset;
+    m_size = m_offset - offset;
     
         //return passed in offset
     return offset;

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 5 Semantic Error Checking
- * Date: 2/18/15
+ * Lab: Lab 6 Calculate node sizes and offsets
+ * Date: 3/4/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -30,9 +30,9 @@ void cStmtsNode::Add(cStmtNode* data)
 
 int cStmtsNode::CalculateSize(int offset)
 {
-    m_offset = WordAlign(offset);
+    m_offset = offset;
     for(auto &stmt : m_stmts)
-        m_offset = stmt->CalculateSize(WordAlign(m_offset));
+        m_offset = stmt->CalculateSize(m_offset);
     
     return offset;
         

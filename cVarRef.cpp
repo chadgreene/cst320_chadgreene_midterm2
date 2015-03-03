@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 5 Semantic Error Checking
- * Date: 2/18/15
+ * Lab: Lab 6 Calculate node sizes and offsets
+ * Date: 3/4/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -10,7 +10,10 @@
 
 cVarRef::cVarRef()
     :m_error("")
-{}
+{
+    m_size = -1;
+    m_offset = -1;
+}
 
 string cVarRef::toString()
 {
@@ -30,10 +33,15 @@ string cVarRef::toString()
     }
     
         //close all the open varref's
-    for(size_t i = 0; i < m_parts.size(); ++i)
+    for(size_t i = 0; i < m_parts.size() - 1; ++i)
         retVal += ")";
     
-    return retVal;
+    if(m_size != -1)
+        retVal += " size: " + std::to_string(m_size);
+    if(m_offset != -1)
+        retVal += " offset: " + std::to_string(m_offset);
+    
+    return retVal + ")";
 }
 
 void cVarRef::Add(VarPart* part)
@@ -135,11 +143,44 @@ bool cVarRef::FindSymbolInParent(VarPart* part)
 
 string cVarRef::GetBaseType()
 {
-    //std::cout << "VarRef returning: " <<  (*m_parts.rbegin())->GetIdentifier()->GetSymbol() << " as "<< (*m_parts.rbegin())->GetBaseType() << std::endl;
     return (*m_parts.rbegin())->GetBaseType();
 }
 
 string cVarRef::GetSymbol()
 {
     return (*m_parts.rbegin())->GetSymbol();
+}
+
+int cVarRef::CalculateSize(int offset)
+{
+    if(m_parts.size() == 1)
+        (*m_parts.begin())->CalculateSize(offset);
+    else
+    {
+            //Start off by getting decl from first varpart in list
+        cDeclNode* decl = (*m_parts.begin())->GetTypeRef();
+            //Set initial offset to decl's calculated offset
+        m_offset = decl->GetCalculatedOffset();
+            //Iterator for rest of varparts
+        list<VarPart*>::iterator it = m_parts.begin();
+            //Loop through varparts adding up offsets for each part
+        for(++it; it != m_parts.end(); ++it)
+        {
+                //Convert decl to structDecl
+            cStructDecl* struc = dynamic_cast<cStructDecl*>(decl);
+                //If successful Find symbol in struct decl and add its already
+                //determined offset
+                //Otherwise varpart is not a struct and just get its offset
+            if(struc != nullptr)
+                m_offset += struc->FindSymbolOffset((*it)->GetIdentifier());
+            else
+                m_offset += decl->GetCalculatedOffset();
+                //Set decl equal to next varpart decl in list
+            decl = (*it)->GetTypeRef();
+        }
+            //Size is equal to last varpart decl size
+        m_size = (*m_parts.rbegin())->GetTypeRef()->GetCalculatedSize();
+    }
+
+    return offset;
 }

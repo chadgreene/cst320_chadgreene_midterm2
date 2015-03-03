@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 5 Semantic Error Checking
- * Date: 2/18/15
+ * Lab: Lab 6 Calculate node sizes and offsets
+ * Date: 3/4/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -48,18 +48,17 @@ void cFuncDecl::SetDecls(cDeclsNode* decls)
 
 int cFuncDecl::CalculateSize(int offset)
 {
+    int params = 0;
     m_offset = 0;
+    
     if(m_params != nullptr)
-       m_offset = m_params->CalculateSize(m_offset);
+       params = m_params->CalculateSize(m_offset);
     if(m_decls != nullptr)
-        m_offset = m_decls->CalculateSize(m_offset);
+        m_offset = m_decls->CalculateSize(params);
     if(m_stmts != nullptr)
         m_offset = m_stmts->CalculateSize(m_offset);
-    
-    
-    
-    
-    m_size = m_offset;
+  
+    m_size = m_offset - params;
 
     return offset;
 }

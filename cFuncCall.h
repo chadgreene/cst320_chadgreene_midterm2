@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Author: Chad Greene
- * Lab: Lab 5 Semantic Error Checking
- * Date: 2/18/15
+ * Lab: Lab 6 Calculate node sizes and offsets
+ * Date: 3/4/15
  * 
  * Purpose: Build an abstract syntax tree by using Bison/Lex to parse a source
  * file into appropriate nodes
@@ -20,6 +20,7 @@ class cFuncCall : public cStmtNode, public ExprNode
         string toString();
         string GetType();
         string GetBaseType();
+        int CalculateSize(int offset);
     
     private:
         cSymbol* m_identifier;
