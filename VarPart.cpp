@@ -22,11 +22,6 @@ string VarPart::toString()
     if(m_ary != nullptr)
         retVal += "[" + m_ary->toString() + "]";
     
-    if(m_size != -1)
-        retVal += " size: " + std::to_string(m_size);
-    if(m_offset != -1)
-        retVal += " offset: " + std::to_string(m_offset);
-    
     return retVal;
 }
 
@@ -61,17 +56,4 @@ string VarPart::GetBaseType()
 string VarPart::GetSymbol()
 {
     return m_identifier->GetSymbol();
-}
-
-int VarPart::CalculateSize(int offset)
-{
-    cDeclNode* decl = m_identifier->GetRef();
-    
-    if(decl != nullptr)
-    {
-        m_offset = decl->GetCalculatedOffset();
-        m_size = decl->GetCalculatedSize();
-    }
-    
-    return offset;
 }

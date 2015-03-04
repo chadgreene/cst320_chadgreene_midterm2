@@ -154,7 +154,10 @@ string cVarRef::GetSymbol()
 int cVarRef::CalculateSize(int offset)
 {
     if(m_parts.size() == 1)
-        (*m_parts.begin())->CalculateSize(offset);
+    {
+        m_offset = (*m_parts.begin())->GetTypeRef()->GetCalculatedOffset();
+        m_size = (*m_parts.begin())->GetTypeRef()->GetCalculatedSize();
+    }
     else
     {
             //Start off by getting decl from first varpart in list

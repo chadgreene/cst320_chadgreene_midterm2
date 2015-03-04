@@ -23,7 +23,6 @@ class VarPart : public ExprNode
         void SetIdentifier(cSymbol* identifier);
         string GetBaseType();
         string GetSymbol();
-        int CalculateSize(int offset);
         
     private:
         cSymbol* m_identifier;
