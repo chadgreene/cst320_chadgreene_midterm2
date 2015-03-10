@@ -14,4 +14,7 @@ using std::string;
 const int WORD_ALIGN = 4;
 
 class cAstNode
-{};
+{
+    public:
+        virtual string Output() { return ""; }
+};

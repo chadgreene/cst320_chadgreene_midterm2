@@ -10,9 +10,13 @@
 
 #include "cSymbolTable.h"
 #include "cAstNode.h"
+#include "cBlockNode.h"
+#include "cStmtsNode.h"
+#include "cStmtNode.h"
 #include "ExprNode.h"
 #include "IntExpr.h"
 #include "BinaryExpr.h"
+#include "cPrintNode.h"
 #include "langparse.h"
 
 extern char *yytext;

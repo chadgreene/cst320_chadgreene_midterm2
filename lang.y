@@ -18,7 +18,11 @@
     char            op_val;
     cAstNode*       ast_node;
     cSymbol*        symbol;
+    cBlockNode*     block_node;
+    cStmtsNode*     stmts_node;
+    cStmtNode*      stmt_node;
     ExprNode*       expr_node;
+    
     }
 
 %{
@@ -38,33 +42,41 @@
 %token  JUNK_TOKEN
 
 %type <ast_node> program
-%type <ast_node> stmts
-%type <ast_node> stmt
+%type <block_node> block
+%type <stmts_node> stmts
+%type <stmt_node> stmt
 %type <expr_node> expression
 
 
 %%
 
-program: stmts                  { $$ = $1;
+program: block                   { $$ = $1;
                                   yyast_root = $$;
                                   if (yynerrs == 0) 
                                       YYACCEPT;
                                   else
                                       YYABORT;
                                 }
-stmts:  stmts stmts             {}
-    |   stmt                    {}
+block:  stmts END ';'           {
+                                    $$ = new cBlockNode($1);
+                                }
+stmts:  stmts stmt              {
+                                    $$ = $1;
+                                    $$->Add($2);
+                                }
+    |   stmt                    {
+                                    $$ = new cStmtsNode();
+                                    $$->Add($1);
+                                }
 stmt:  expression IDENTIFIER ';'
                                 {
                                     $2->SetValue($1->GetValue());
                                     $$ = nullptr;
                                 }
     |   expression PRINT ';'    {
-                                    std::cout << $1->GetValue() << std::endl;
+                                    $$ = new cPrintNode($1);
                                 }
-    |   END ';'                 {
-                                    $$ = nullptr;
-                                }
+    
 expression: INT                 {
                                     $$ = new IntExpr($1);
                                 }
