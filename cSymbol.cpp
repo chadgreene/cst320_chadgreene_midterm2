@@ -10,73 +10,21 @@
 
 int cSymbol::symbolCount = 0;
 
-cSymbol::cSymbol(string symbol, bool type)
-    :m_symbol(symbol), m_sequence(++symbolCount), m_type(type), m_declared(false), m_typeRef(""), m_decl(nullptr), m_size(0)
+cSymbol::cSymbol(string symbol)
+    :m_symbol(symbol), m_sequence(++symbolCount), m_data(-1)
 {}
-
-string cSymbol::toString()
-{
-    return "sym: "+ m_symbol + " " + std::to_string(m_sequence);
-}
-
-bool cSymbol::IsType()
-{
-    return m_type;
-}
 
 string cSymbol::GetSymbol()
 {
     return m_symbol;
 }
 
-void cSymbol::SetTypeFlag()
+void cSymbol::SetValue(int val)
 {
-    m_type = true;
+    m_data = val;
 }
 
-void cSymbol::SetDeclared()
+int cSymbol::GetValue()
 {
-    m_declared = true;
-}
-
-bool cSymbol::IsDeclared()
-{
-    return m_declared;
-}
-
-void cSymbol::SetTypeRef(string typeRef, string baseType, cDeclNode* decl)
-{
-    m_typeRef = typeRef;
-    m_baseType = baseType;
-    m_decl = decl;
-}
-
-string cSymbol::GetType()
-{
-    return m_typeRef;
-}
-
-string cSymbol::GetBaseType()
-{
-    return m_baseType;
-}
-
-cDeclNode* cSymbol::GetRef()
-{
-    return m_decl;
-}
-
-void cSymbol::ReduceSymbolCount()
-{
-    symbolCount--;
-}
-
-void cSymbol::SetSize(int size)
-{
-    m_size = size;
-}
-
-int cSymbol::GetSize()
-{
-    return m_size;
+    return m_data;
 }

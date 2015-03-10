@@ -11,35 +11,20 @@
 #include <stdlib.h>
 #include <string>
 #include <iostream>
-#include "cDeclNode.h"
+#include "ExprNode.h"
 using std::string;
 
-class cSymbol
+class cSymbol : public ExprNode
 {
   public:
-    cSymbol(string symbol, bool type = false);
-    string toString();
-    bool IsType();
+    cSymbol(string symbol);
     string GetSymbol();
-    void SetTypeFlag();
-    void SetDeclared();
-    bool IsDeclared();
-    void SetTypeRef(string typeRef, string baseType, cDeclNode* decl = nullptr);
-    string GetType();
-    string GetBaseType();
-    cDeclNode* GetRef();
-    void ReduceSymbolCount();
-    void SetSize(int size);
-    int GetSize();
+    void SetValue(int val);
+    int GetValue();
     
   private:
     string m_symbol;
     int m_sequence;
     static int symbolCount;
-    bool m_type;
-    bool m_declared;
-    string m_typeRef;
-    cDeclNode* m_decl;
-    string m_baseType;
-    int m_size;
+    int m_data;
 };

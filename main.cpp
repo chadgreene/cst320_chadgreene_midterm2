@@ -60,8 +60,6 @@ int main(int argc, char **argv)
         if (result == 0)
         {
             //output << yyast_root->toString() << std::endl;
-            yyast_root->CalculateSize(0);
-            output << yyast_root->toString() << std::endl;
         } else {
             output << std::to_string(yynerrs) <<  " Errors in compile\n";
         }

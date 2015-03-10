@@ -14,10 +14,8 @@ class IntExpr : public ExprNode
 {
     public:
         IntExpr(int val = -1);
-        string toString();
-        string GetType();
-        string GetBaseType();
-    
+        int GetValue();
+        
     private:
         int m_val;
 };

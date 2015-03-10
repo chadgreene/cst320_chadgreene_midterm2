@@ -12,19 +12,7 @@ IntExpr::IntExpr(int val)
     :m_val(val)
 {}
 
-string IntExpr::toString()
+int IntExpr::GetValue()
 {
-    return "(EXPR: " + std::to_string(m_val) + ")";
-}
-
-string IntExpr::GetType()
-{
-    if(m_val >= -128 && m_val <= 127)
-        return "char";
-    return "int";
-}
-
-string IntExpr::GetBaseType()
-{
-    return GetType();
+    return m_val;
 }

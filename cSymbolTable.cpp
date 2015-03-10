@@ -12,26 +12,7 @@ cSymbolTable* cSymbolTable::m_symbols = nullptr;
 
 cSymbolTable::cSymbolTable()
 {
-        //Push global map onto table
     m_tables.push_front(new map<string,cSymbol*>());
-        
-        //Add char datatype
-    cSymbol* global = new cSymbol("char", true);
-    global->SetTypeRef("char", "char", nullptr);
-    global->SetSize(1);
-    m_tables.front()->insert(std::pair<string,cSymbol*>("char", global));
-    
-        //Add int datatype
-    global = new cSymbol("int", true);
-    global->SetTypeRef("int", "int", nullptr);
-    global->SetSize(4);
-    m_tables.front()->insert(std::pair<string,cSymbol*>("int", global));
-    
-        //Add float datatype
-    global = new cSymbol("float", true);
-    global->SetTypeRef("float","float",nullptr);
-    global->SetSize(8);
-    m_tables.front()->insert(std::pair<string,cSymbol*>("float", global));
 }
 
 cSymbolTable* cSymbolTable::GetInstance()
@@ -57,7 +38,7 @@ void cSymbolTable::DecreaseScope()
     m_tables.pop_front();
 }
 
-cSymbol* cSymbolTable::InsertSymbol(string symbol, bool type)
+cSymbol* cSymbolTable::InsertSymbol(string symbol)
 {
     //Define return variable
     cSymbol * sym;
@@ -68,7 +49,7 @@ cSymbol* cSymbolTable::InsertSymbol(string symbol, bool type)
     //Add symbol if it doesn't already exist
     if(it == m_tables.front()->end())
     {
-        sym = new cSymbol(symbol, type);
+        sym = new cSymbol(symbol);
         m_tables.front()->insert(std::pair<string,cSymbol*>(symbol, sym));
     }
     //Otherwise get symbol from symbol table

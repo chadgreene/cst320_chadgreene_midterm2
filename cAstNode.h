@@ -14,27 +14,4 @@ using std::string;
 const int WORD_ALIGN = 4;
 
 class cAstNode
-{
-    public:
-        virtual string toString() = 0;
-        virtual int CalculateSize(int offset) = 0;
-        
-        
-        virtual bool SemanticError()
-        {
-            return m_semanticError;
-        }
-        
-        int WordAlign(int offset)
-        {
-            while((offset % WORD_ALIGN) != 0)
-                offset++;
-            return offset;
-        }
-        
-        
-    protected:
-        bool m_semanticError;
-        int m_offset;
-        int m_size;
-};
+{};

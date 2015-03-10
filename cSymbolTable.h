@@ -23,7 +23,7 @@ class cSymbolTable
         static cSymbolTable* GetInstance();
         map<string,cSymbol*>* IncreaseScope();
         void DecreaseScope();
-        cSymbol* InsertSymbol(string symbol, bool type = false);
+        cSymbol* InsertSymbol(string symbol);
         cSymbol* Lookup(string symbol);
         bool InCurrentScope(string symbol);
         void RemoveSymbol(cSymbol* symbol);

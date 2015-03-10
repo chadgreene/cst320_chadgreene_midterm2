@@ -12,28 +12,25 @@ BinaryExpr::BinaryExpr(ExprNode* lhs, char oper, ExprNode* rhs)
     :m_lhs(lhs), m_oper(oper), m_rhs(rhs)
 {}
 
-string BinaryExpr::toString()
+int BinaryExpr::GetValue()
 {
-    return "(EXPR: " + m_lhs->toString() + " " + m_oper + " " + m_rhs->toString() + ")";
-}
-
-string BinaryExpr::GetType()
-{
-    if(m_lhs->GetType() == "float" || m_rhs->GetType() == "float")
-        return "float";
-        
-    return m_lhs->GetType();
-}
-
-string BinaryExpr::GetBaseType()
-{
-    return GetType();
-}
-
-int BinaryExpr::CalculateSize(int offset)
-{
-    m_lhs->CalculateSize(offset);
-    m_rhs->CalculateSize(offset);
+    int retVal = 0;
+    switch(m_oper)
+    {
+        case '+':
+            retVal = m_lhs->GetValue() + m_rhs->GetValue();
+            break;
+        case '-':
+            retVal = m_lhs->GetValue() - m_rhs->GetValue();
+            break;
+        case '*':
+            retVal = m_lhs->GetValue() * m_rhs->GetValue();
+            break;
+        case '/':
+            if(m_rhs->GetValue() != 0)
+                retVal = m_lhs->GetValue() + m_rhs->GetValue();
+            break;
+    }
     
-    return offset;
+    return retVal;
 }

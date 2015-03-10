@@ -15,10 +15,7 @@ class BinaryExpr : public ExprNode
 {
     public:
         BinaryExpr(ExprNode* lhs = nullptr, char oper = '~', ExprNode* rhs = nullptr);
-        string toString();
-        string GetType();
-        string GetBaseType();
-        int CalculateSize(int offset);
+        int GetValue();
     
     private:
         ExprNode* m_rhs;

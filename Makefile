@@ -4,31 +4,8 @@ OBJS=main.o \
 	 cSymbolTable.o \
 	 cSymbol.o \
 	 langparse.o \
-	 cBlockNode.o \
-	 cPrintNode.o \
-	 cDeclsNode.o \
-	 cStmtsNode.o \
 	 IntExpr.o \
-	 FloatExpr.o \
 	 BinaryExpr.o \
-	 cVarNode.o \
-	 cArraySpec.o \
-	 cVarRef.o \
-	 VarPart.o \
-	 ArrayVal.o \
-	 cScanNode.o \
-	 cIfNode.o \
-	 cReturnNode.o \
-	 cWhileNode.o \
-	 cAssignmentNode.o \
-	 cStructDecl.o \
-	 cParamNode.o \
-	 cParamSpec.o \
-	 cParamsNode.o \
-	 cParamsSpec.o \
-	 cFuncDecl.o \
-	 cFuncCall.o \
-	 cArrayDecl.o
 	 
 all: lang
 
